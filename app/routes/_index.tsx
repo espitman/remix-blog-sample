@@ -2,10 +2,10 @@ import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from "@remi
 import { redirect } from "@remix-run/node";
 import { Form, Link, useLoaderData, useNavigation } from "@remix-run/react";
 import { useState } from "react";
-import { deletePostById, getAllPosts } from "~/lib/post.server";
+import { deletePostById, getAllPosts } from "~/lib/posts/post.service";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
-import { cn } from "~/lib/utils";
+import { cn } from "~/lib/utils/cn";
 import {
   Dialog,
   DialogContent,

@@ -1,4 +1,4 @@
-import { db } from "./db.server";
+import { db } from "../db/index.server";
 import type { CreatePostData, UpdatePostData, ValidationResult } from "./post.types";
 
 export type { Post, CreatePostData, UpdatePostData } from "./post.types";
