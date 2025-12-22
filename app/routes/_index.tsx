@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Form, Link, useLoaderData, useNavigation } from "@remix-run/react";
 import { useState } from "react";
 import { deletePostById, getAllPosts } from "~/lib/posts/post.service";
@@ -25,7 +25,7 @@ export const meta: MetaFunction = () => {
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const posts = await getAllPosts();
-  return Response.json({ posts });
+  return json({ posts });
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -38,14 +38,14 @@ export async function action({ request }: ActionFunctionArgs) {
       await deletePostById(postId);
       return redirect("/");
     } catch (error) {
-      return Response.json(
+      return json(
         { error: error instanceof Error ? error.message : "Post not found" },
         { status: 404 }
       );
     }
   }
 
-  return Response.json({ error: "Invalid action" }, { status: 400 });
+  return json({ error: "Invalid action" }, { status: 400 });
 }
 
 function DeleteDialog({ postId, postTitle, isDeleting }: { postId: string; postTitle: string; isDeleting: boolean }) {

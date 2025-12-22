@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs, MetaFunction } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useNavigation } from "@remix-run/react";
 import { createPost, validatePostData } from "~/lib/posts/post.service";
 import { Button, buttonVariants } from "~/components/ui/button";
@@ -23,14 +23,14 @@ export async function action({ request }: ActionFunctionArgs) {
   // Validate form data
   const validation = validatePostData({ title, slug, content, imageUrl });
   if (!validation.isValid || !validation.data) {
-    return Response.json({ error: validation.error }, { status: 400 });
+    return json({ error: validation.error }, { status: 400 });
   }
 
   try {
     await createPost(validation.data);
     return redirect("/");
   } catch (error) {
-    return Response.json(
+    return json(
       {
         error:
           error instanceof Error

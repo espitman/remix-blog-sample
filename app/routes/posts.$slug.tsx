@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Form, Link, useLoaderData, useNavigation } from "@remix-run/react";
 import { useState } from "react";
 import { deletePostBySlug, getPostBySlug } from "~/lib/posts/post.service";
@@ -18,7 +18,7 @@ import {
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const post = await getPostBySlug(params.slug!);
-  return Response.json({ post });
+  return json({ post });
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -34,7 +34,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     }
   }
 
-  return Response.json({ error: "Invalid action" }, { status: 400 });
+  return json({ error: "Invalid action" }, { status: 400 });
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {

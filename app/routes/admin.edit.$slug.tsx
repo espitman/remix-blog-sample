@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useLoaderData, useNavigation } from "@remix-run/react";
 import { getPostBySlug, updatePost, validatePostData } from "~/lib/posts/post.service";
 import { Button, buttonVariants } from "~/components/ui/button";
@@ -11,7 +11,7 @@ import { Alert, AlertDescription } from "~/components/ui/alert";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const post = await getPostBySlug(params.slug!);
-  return Response.json({ post });
+  return json({ post });
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -31,14 +31,14 @@ export async function action({ request, params }: ActionFunctionArgs) {
   // Validate form data
   const validation = validatePostData({ title, slug, content, imageUrl });
   if (!validation.isValid || !validation.data) {
-    return Response.json({ error: validation.error }, { status: 400 });
+    return json({ error: validation.error }, { status: 400 });
   }
 
   try {
     await updatePost(params.slug!, validation.data);
     return redirect(`/posts/${validation.data.slug}`);
   } catch (error) {
-    return Response.json(
+    return json(
       {
         error:
           error instanceof Error
