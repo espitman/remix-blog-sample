@@ -18,9 +18,10 @@ export async function action({ request }: ActionFunctionArgs) {
   const title = formData.get("title");
   const slug = formData.get("slug");
   const content = formData.get("content");
+  const imageUrl = formData.get("imageUrl");
 
   // Validate form data
-  const validation = validatePostData({ title, slug, content });
+  const validation = validatePostData({ title, slug, content, imageUrl });
   if (!validation.isValid || !validation.data) {
     return Response.json({ error: validation.error }, { status: 400 });
   }
@@ -106,6 +107,21 @@ export default function AdminNew() {
                 />
                 <p className="text-xs text-muted-foreground">
                   Use lowercase letters, numbers, and hyphens only
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="imageUrl" className="text-sm font-medium">
+                  Image URL (Optional)
+                </label>
+                <Input
+                  id="imageUrl"
+                  name="imageUrl"
+                  type="url"
+                  placeholder="https://example.com/image.jpg"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Enter a URL for the post image
                 </p>
               </div>
 

@@ -54,13 +54,14 @@ export function validatePostData(data: {
   title: unknown;
   slug: unknown;
   content: unknown;
+  imageUrl?: unknown;
 }): ValidationResult {
-  const { title, slug, content } = data;
+  const { title, slug, content, imageUrl } = data;
 
   if (!title || !slug || !content) {
     return {
       isValid: false,
-      error: "All fields are required",
+      error: "Title, slug, and content are required",
     };
   }
 
@@ -75,9 +76,22 @@ export function validatePostData(data: {
     };
   }
 
+  // imageUrl is optional, but if provided must be a string
+  if (imageUrl !== undefined && imageUrl !== null && typeof imageUrl !== "string") {
+    return {
+      isValid: false,
+      error: "Image URL must be a valid string",
+    };
+  }
+
   return {
     isValid: true,
-    data: { title, slug, content },
+    data: { 
+      title, 
+      slug, 
+      content,
+      imageUrl: imageUrl && typeof imageUrl === "string" ? imageUrl : null,
+    },
   };
 }
 

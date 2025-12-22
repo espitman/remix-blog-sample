@@ -15,6 +15,7 @@ model Post {
   title     String
   slug      String   @unique
   content   String   @db.Text
+  imageUrl  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

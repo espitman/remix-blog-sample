@@ -80,6 +80,15 @@ export default function PostSlug() {
         </div>
 
         <Card>
+          {post.imageUrl && (
+            <div className="w-full h-64 md:h-96 overflow-hidden rounded-t-lg">
+              <img
+                src={post.imageUrl}
+                alt={post.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
           <CardHeader>
             <div className="flex justify-between items-start gap-4">
               <CardTitle className="text-4xl flex-1">{post.title}</CardTitle>

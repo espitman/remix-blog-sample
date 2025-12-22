@@ -140,6 +140,17 @@ export default function Index() {
               
               return (
                 <Card key={post.id} className="hover:shadow-lg transition-shadow">
+                  {post.imageUrl && (
+                    <Link to={`/posts/${post.slug}`}>
+                      <div className="w-full h-48 overflow-hidden rounded-t-lg">
+                        <img
+                          src={post.imageUrl}
+                          alt={post.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </Link>
+                  )}
                   <CardHeader>
                     <Link to={`/posts/${post.slug}`}>
                       <CardTitle className="line-clamp-2">{post.title}</CardTitle>
