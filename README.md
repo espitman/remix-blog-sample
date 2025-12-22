@@ -1,0 +1,330 @@
+# Remix Blog Application
+
+یک وبلاگ مدرن و کامل ساخته شده با Remix، React، Prisma و PostgreSQL. این پروژه از shadcn/ui برای رابط کاربری استفاده می‌کند و دارای قابلیت‌های کامل CRUD برای مدیریت پست‌ها است.
+
+## 🚀 تکنولوژی‌های استفاده شده
+
+### Core Stack
+- **[Remix](https://remix.run/)** (v2.9.1) - فریمورک React برای وب
+- **[Vite](https://vitejs.dev/)** (v5.4.2) - Build tool و bundler
+- **[React](https://react.dev/)** (v18.3.1) - کتابخانه UI
+- **[TypeScript](https://www.typescriptlang.org/)** (v5.5.4) - زبان برنامه‌نویسی
+
+### Database & ORM
+- **[Prisma](https://www.prisma.io/)** (v5.19.1) - ORM مدرن برای Node.js
+- **[PostgreSQL](https://www.postgresql.org/)** - دیتابیس رابطه‌ای
+
+### Styling & UI
+- **[Tailwind CSS](https://tailwindcss.com/)** (v3.4.13) - فریمورک CSS utility-first
+- **[shadcn/ui](https://ui.shadcn.com/)** - کامپوننت‌های UI قابل استفاده مجدد
+- **[Lucide React](https://lucide.dev/)** - آیکون‌ها
+
+### Utilities
+- **class-variance-authority** - مدیریت variant های کامپوننت
+- **clsx** & **tailwind-merge** - مدیریت کلاس‌های CSS
+- **tailwindcss-animate** - انیمیشن‌های Tailwind
+
+## 📁 ساختار پروژه
+
+```
+blog/
+├── app/                          # کد اصلی اپلیکیشن
+│   ├── components/              # کامپوننت‌های React
+│   │   └── ui/                  # کامپوننت‌های UI از shadcn/ui
+│   │       ├── alert.tsx        # کامپوننت Alert
+│   │       ├── button.tsx       # کامپوننت Button
+│   │       ├── card.tsx         # کامپوننت Card
+│   │       ├── dialog.tsx       # کامپوننت Dialog (برای تایید حذف)
+│   │       ├── input.tsx        # کامپوننت Input
+│   │       └── textarea.tsx     # کامپوننت Textarea
+│   ├── lib/                     # توابع و utilities
+│   │   ├── db.server.ts         # اتصال Prisma Client
+│   │   ├── post.server.ts       # منطق CRUD پست‌ها
+│   │   ├── post.types.ts        # Type definitions برای پست‌ها
+│   │   └── utils.ts             # توابع کمکی (cn function)
+│   ├── routes/                  # Route handlers (Remix)
+│   │   ├── _index.tsx           # صفحه اصلی (لیست پست‌ها)
+│   │   ├── posts.$slug.tsx      # صفحه نمایش پست
+│   │   ├── admin.new.tsx        # صفحه ایجاد پست جدید
+│   │   └── admin.edit.$slug.tsx # صفحه ویرایش پست
+│   ├── root.tsx                  # Root component
+│   └── tailwind.css              # فایل CSS اصلی
+├── prisma/                       # Prisma configuration
+│   └── schema.prisma             # Schema دیتابیس
+├── components.json               # تنظیمات shadcn/ui
+├── package.json                 # Dependencies و scripts
+├── tsconfig.json                # تنظیمات TypeScript
+├── tailwind.config.ts           # تنظیمات Tailwind CSS
+├── vite.config.ts               # تنظیمات Vite
+└── remix.config.js              # تنظیمات Remix
+```
+
+## 🏗️ معماری پروژه
+
+### 1. Routes (Remix File-based Routing)
+
+#### `app/routes/_index.tsx`
+- **مسیر:** `/`
+- **عملکرد:** نمایش لیست تمام پست‌ها
+- **ویژگی‌ها:**
+  - نمایش پست‌ها در grid layout
+  - دکمه‌های Edit و Delete برای هر پست
+  - Dialog برای تایید حذف
+
+#### `app/routes/posts.$slug.tsx`
+- **مسیر:** `/posts/:slug`
+- **عملکرد:** نمایش یک پست کامل
+- **ویژگی‌ها:**
+  - نمایش کامل محتوای پست
+  - دکمه‌های Edit و Delete
+  - Dialog برای تایید حذف
+
+#### `app/routes/admin.new.tsx`
+- **مسیر:** `/admin/new`
+- **عملکرد:** ایجاد پست جدید
+- **ویژگی‌ها:**
+  - فرم با فیلدهای title, slug, content
+  - اعتبارسنجی فرم
+  - نمایش خطاها
+
+#### `app/routes/admin.edit.$slug.tsx`
+- **مسیر:** `/admin/edit/:slug`
+- **عملکرد:** ویرایش پست موجود
+- **ویژگی‌ها:**
+  - فرم پر شده با داده‌های فعلی
+  - اعتبارسنجی و بررسی slug تکراری
+  - به‌روزرسانی پست
+
+### 2. Service Layer
+
+#### `app/lib/post.server.ts`
+شامل تمام توابع مربوط به عملیات CRUD:
+- `getAllPosts()` - دریافت همه پست‌ها
+- `getPostBySlug(slug)` - دریافت پست با slug
+- `getPostById(id)` - دریافت پست با ID
+- `createPost(data)` - ایجاد پست جدید
+- `updatePost(slug, data)` - به‌روزرسانی پست
+- `deletePostById(id)` - حذف پست با ID
+- `deletePostBySlug(slug)` - حذف پست با slug
+- `validatePostData(data)` - اعتبارسنجی داده‌های پست
+- `slugExists(slug)` - بررسی وجود slug
+
+#### `app/lib/post.types.ts`
+Type definitions:
+- `Post` - نوع پست
+- `CreatePostData` - داده‌های ایجاد پست
+- `UpdatePostData` - داده‌های به‌روزرسانی پست
+- `ValidationResult` - نتیجه اعتبارسنجی
+
+#### `app/lib/db.server.ts`
+مدیریت اتصال Prisma Client:
+- Singleton pattern برای اتصال دیتابیس
+- مدیریت اتصال در development و production
+
+### 3. UI Components (shadcn/ui)
+
+تمام کامپوننت‌های UI از shadcn/ui استفاده می‌کنند:
+- **Button** - دکمه با variant های مختلف
+- **Card** - کارت برای نمایش محتوا
+- **Input** - فیلد ورودی
+- **Textarea** - فیلد متن چندخطی
+- **Alert** - نمایش پیام‌های خطا
+- **Dialog** - Modal برای تایید حذف
+
+## 🗄️ ساختار دیتابیس
+
+### Model: Post
+
+```prisma
+model Post {
+  id        String   @id @default(uuid())
+  title     String
+  slug      String   @unique
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("posts")
+}
+```
+
+**فیلدها:**
+- `id` - شناسه یکتا (UUID)
+- `title` - عنوان پست
+- `slug` - شناسه URL-friendly (یکتا)
+- `content` - محتوای پست (Text)
+- `createdAt` - تاریخ ایجاد
+- `updatedAt` - تاریخ آخرین به‌روزرسانی
+
+## 🛠️ نصب و راه‌اندازی
+
+### پیش‌نیازها
+- Node.js >= 20.0.0
+- PostgreSQL (remote یا local)
+- npm یا yarn
+
+### مراحل نصب
+
+1. **Clone یا دانلود پروژه**
+```bash
+cd blog
+```
+
+2. **نصب Dependencies**
+```bash
+npm install
+```
+
+3. **تنظیم Environment Variables**
+فایل `.env` را در ریشه پروژه ایجاد کنید:
+```env
+DATABASE_URL="postgresql://user:password@host:port/database?schema=schema_name"
+```
+
+**مثال:**
+```env
+DATABASE_URL="postgresql://root:password@makalu.liara.cloud:33009/postgres?schema=testblog"
+```
+
+4. **Push Schema به دیتابیس**
+```bash
+npx prisma db push
+```
+
+این دستور جدول `posts` را در دیتابیس شما ایجاد می‌کند.
+
+5. **اجرای پروژه**
+```bash
+npm run dev
+```
+
+پروژه در `http://localhost:5173` در دسترس خواهد بود.
+
+## 📜 Scripts
+
+```bash
+# Development
+npm run dev          # اجرای سرور توسعه
+
+# Build
+npm run build        # Build برای production
+
+# Production
+npm start            # اجرای سرور production
+
+# Utilities
+npm run typecheck    # بررسی TypeScript
+npm run lint         # اجرای ESLint
+```
+
+## ✨ ویژگی‌ها
+
+### CRUD Operations
+- ✅ **Create** - ایجاد پست جدید
+- ✅ **Read** - نمایش لیست و جزئیات پست
+- ✅ **Update** - ویرایش پست
+- ✅ **Delete** - حذف پست با تایید
+
+### UI/UX Features
+- 🎨 طراحی مدرن با shadcn/ui
+- 📱 Responsive design
+- 🎭 Dialog برای تایید حذف
+- ⚡ Loading states
+- 🚨 Error handling
+- ✨ Animations و transitions
+
+### Developer Experience
+- 🔷 TypeScript برای type safety
+- 🏗️ Service layer برای جداسازی منطق
+- 📦 کامپوننت‌های قابل استفاده مجدد
+- 🎯 File-based routing
+- 🔍 ESLint برای code quality
+
+## 🗺️ Routes
+
+| Route | Description |
+|-------|-------------|
+| `/` | صفحه اصلی - لیست تمام پست‌ها |
+| `/posts/:slug` | نمایش یک پست کامل |
+| `/admin/new` | ایجاد پست جدید |
+| `/admin/edit/:slug` | ویرایش پست |
+
+## 🔐 اعتبارسنجی
+
+### ایجاد/ویرایش پست
+- تمام فیلدها (title, slug, content) الزامی هستند
+- Slug باید فقط شامل حروف کوچک، اعداد و خط تیره باشد
+- Slug باید یکتا باشد
+
+### حذف پست
+- تایید کاربر از طریق Dialog
+- نمایش نام پست در پیام تایید
+
+## 🎨 Styling
+
+پروژه از Tailwind CSS با CSS Variables استفاده می‌کند:
+- **Theme Variables** در `app/tailwind.css`
+- **Dark Mode** آماده (فعلاً غیرفعال)
+- **Custom Colors** برای primary, secondary, destructive و غیره
+
+## 📦 Dependencies
+
+### Production
+- `@remix-run/*` - Remix framework
+- `@prisma/client` - Prisma ORM
+- `react` & `react-dom` - React library
+- `tailwindcss` - CSS framework
+- `class-variance-authority` - Variant management
+- `lucide-react` - Icons
+
+### Development
+- `@remix-run/dev` - Remix dev tools
+- `prisma` - Prisma CLI
+- `typescript` - TypeScript compiler
+- `vite` - Build tool
+- `eslint` - Linter
+
+## 🚀 Deployment
+
+### Build برای Production
+```bash
+npm run build
+```
+
+### Environment Variables
+مطمئن شوید که `DATABASE_URL` در production environment تنظیم شده است.
+
+### Prisma در Production
+```bash
+npx prisma generate
+npx prisma db push
+```
+
+## 📝 نکات مهم
+
+1. **Database Connection**: اطمینان حاصل کنید که connection string دیتابیس صحیح است
+2. **Schema Name**: در connection string، schema name را مشخص کنید (مثلاً `?schema=testblog`)
+3. **Prisma Client**: بعد از تغییر schema، `npx prisma generate` را اجرا کنید
+4. **Type Safety**: تمام route ها و service functions از TypeScript استفاده می‌کنند
+
+## 🤝 Contributing
+
+برای مشارکت در پروژه:
+1. Fork کنید
+2. Branch جدید ایجاد کنید (`git checkout -b feature/AmazingFeature`)
+3. تغییرات را commit کنید (`git commit -m 'Add some AmazingFeature'`)
+4. Push کنید (`git push origin feature/AmazingFeature`)
+5. Pull Request باز کنید
+
+## 📄 License
+
+این پروژه تحت مجوز MIT منتشر شده است.
+
+## 👨‍💻 Author
+
+ساخته شده با ❤️ توسط Remix و React
+
+---
+
+**نکته:** این پروژه یک نمونه کامل از یک وبلاگ با Remix است و می‌تواند به عنوان پایه برای پروژه‌های بزرگ‌تر استفاده شود.
+# remix-blog-sample
