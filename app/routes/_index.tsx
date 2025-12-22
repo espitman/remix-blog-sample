@@ -162,10 +162,12 @@ export default function Index() {
                   </CardHeader>
                   <CardContent>
                     <p className="text-xs text-muted-foreground">
-                      {new Date(post.createdAt).toLocaleDateString("en-US", {
+                      {new Date(post.createdAt).toLocaleString("en-US", {
                         year: "numeric",
                         month: "long",
                         day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
                       })}
                     </p>
                   </CardContent>
