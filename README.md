@@ -38,10 +38,16 @@ blog/
 │   │       ├── input.tsx        # کامپوننت Input
 │   │       └── textarea.tsx     # کامپوننت Textarea
 │   ├── lib/                     # توابع و utilities
-│   │   ├── db.server.ts         # اتصال Prisma Client
-│   │   ├── post.server.ts       # منطق CRUD پست‌ها
-│   │   ├── post.types.ts        # Type definitions برای پست‌ها
-│   │   └── utils.ts             # توابع کمکی (cn function)
+│   │   ├── db/                  # مدیریت دیتابیس
+│   │   │   ├── index.server.ts  # اتصال Prisma Client
+│   │   │   └── index.ts         # Re-export برای client
+│   │   ├── posts/               # منطق و تایپ‌های پست
+│   │   │   ├── post.service.ts  # تمام توابع CRUD پست‌ها
+│   │   │   ├── post.types.ts    # Type definitions برای پست‌ها
+│   │   │   └── index.ts         # Export مرکزی
+│   │   └── utils/                # توابع کمکی
+│   │       ├── cn.ts            # تابع merge کلاس‌ها
+│   │       └── index.ts         # Export مرکزی
 │   ├── routes/                  # Route handlers (Remix)
 │   │   ├── _index.tsx           # صفحه اصلی (لیست پست‌ها)
 │   │   ├── posts.$slug.tsx      # صفحه نمایش پست
@@ -95,31 +101,43 @@ blog/
   - اعتبارسنجی و بررسی slug تکراری
   - به‌روزرسانی پست
 
-### 2. Service Layer
+### 2. Service Layer (ساختار فولدربندی شده)
 
-#### `app/lib/post.server.ts`
-شامل تمام توابع مربوط به عملیات CRUD:
-- `getAllPosts()` - دریافت همه پست‌ها
-- `getPostBySlug(slug)` - دریافت پست با slug
-- `getPostById(id)` - دریافت پست با ID
-- `createPost(data)` - ایجاد پست جدید
-- `updatePost(slug, data)` - به‌روزرسانی پست
-- `deletePostById(id)` - حذف پست با ID
-- `deletePostBySlug(slug)` - حذف پست با slug
-- `validatePostData(data)` - اعتبارسنجی داده‌های پست
-- `slugExists(slug)` - بررسی وجود slug
+#### `app/lib/db/` - مدیریت دیتابیس
+- **`index.server.ts`**: اتصال Prisma Client
+  - Singleton pattern برای اتصال دیتابیس
+  - مدیریت اتصال در development و production
+- **`index.ts`**: Re-export برای استفاده در client-side (در صورت نیاز)
 
-#### `app/lib/post.types.ts`
-Type definitions:
-- `Post` - نوع پست
-- `CreatePostData` - داده‌های ایجاد پست
-- `UpdatePostData` - داده‌های به‌روزرسانی پست
-- `ValidationResult` - نتیجه اعتبارسنجی
+#### `app/lib/posts/` - منطق و تایپ‌های پست
+- **`post.service.ts`**: شامل تمام توابع مربوط به عملیات CRUD:
+  - `getAllPosts()` - دریافت همه پست‌ها
+  - `getPostBySlug(slug)` - دریافت پست با slug
+  - `getPostById(id)` - دریافت پست با ID
+  - `createPost(data)` - ایجاد پست جدید
+  - `updatePost(slug, data)` - به‌روزرسانی پست
+  - `deletePostById(id)` - حذف پست با ID
+  - `deletePostBySlug(slug)` - حذف پست با slug
+  - `validatePostData(data)` - اعتبارسنجی داده‌های پست
+  - `slugExists(slug)` - بررسی وجود slug
 
-#### `app/lib/db.server.ts`
-مدیریت اتصال Prisma Client:
-- Singleton pattern برای اتصال دیتابیس
-- مدیریت اتصال در development و production
+- **`post.types.ts`**: Type definitions:
+  - `Post` - نوع پست
+  - `CreatePostData` - داده‌های ایجاد پست
+  - `UpdatePostData` - داده‌های به‌روزرسانی پست
+  - `ValidationResult` - نتیجه اعتبارسنجی
+
+- **`index.ts`**: Export مرکزی برای import راحت‌تر
+
+#### `app/lib/utils/` - توابع کمکی
+- **`cn.ts`**: تابع `cn()` برای merge کردن کلاس‌های Tailwind CSS
+- **`index.ts`**: Export مرکزی
+
+**مزایای ساختار جدید:**
+- ✅ سازماندهی بهتر: هر domain در فولدر خودش
+- ✅ مقیاس‌پذیری: افزودن domain جدید آسان‌تر است
+- ✅ جداسازی: دیتابیس، سرویس‌ها و utilities جدا هستند
+- ✅ قابلیت نگهداری: پیدا کردن فایل‌ها راحت‌تر است
 
 ### 3. UI Components (shadcn/ui)
 
@@ -235,10 +253,12 @@ npm run lint         # اجرای ESLint
 
 ### Developer Experience
 - 🔷 TypeScript برای type safety
-- 🏗️ Service layer برای جداسازی منطق
+- 🏗️ Service layer ساختارمند و فولدربندی شده
 - 📦 کامپوننت‌های قابل استفاده مجدد
 - 🎯 File-based routing
 - 🔍 ESLint برای code quality
+- 📁 ساختار منظم lib برای مقیاس‌پذیری
+- 🔄 استفاده از Response.json() (Remix v2+)
 
 ## 🗺️ Routes
 
@@ -306,6 +326,11 @@ npx prisma db push
 2. **Schema Name**: در connection string، schema name را مشخص کنید (مثلاً `?schema=testblog`)
 3. **Prisma Client**: بعد از تغییر schema، `npx prisma generate` را اجرا کنید
 4. **Type Safety**: تمام route ها و service functions از TypeScript استفاده می‌کنند
+5. **Import Paths**: از مسیرهای جدید استفاده کنید:
+   - `~/lib/posts/post.service` برای توابع پست
+   - `~/lib/db/index.server` برای دیتابیس
+   - `~/lib/utils/cn` برای utilities
+6. **Response.json()**: پروژه از `Response.json()` به جای `json()` deprecated استفاده می‌کند
 
 ## 🤝 Contributing
 
