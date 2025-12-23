@@ -1,15 +1,27 @@
 import { db } from "../db/index.server";
-import type { CreatePostData, UpdatePostData, ValidationResult } from "./post.types";
+import type { CreatePostData, UpdatePostData, ValidationResult, Post } from "./post.types";
+import type { Post as PrismaPost } from "@prisma/client";
 
 export type { Post, CreatePostData, UpdatePostData } from "./post.types";
 
 /**
  * Get all posts ordered by creation date (newest first)
  */
-export async function getAllPosts() {
-  return db.post.findMany({
+export async function getAllPosts(): Promise<Post[]> {
+  const posts = await db.post.findMany({
     orderBy: { createdAt: "desc" },
   });
+  
+  // Map Prisma Post to our Post type to ensure all fields are included
+  return posts.map((post: PrismaPost): Post => ({
+    id: post.id,
+    title: post.title,
+    slug: post.slug,
+    content: post.content,
+    imageUrl: post.imageUrl,
+    createdAt: post.createdAt,
+    updatedAt: post.updatedAt,
+  }));
 }
 
 /**

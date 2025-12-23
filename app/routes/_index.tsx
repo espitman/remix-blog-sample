@@ -2,7 +2,8 @@ import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from "@remi
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useLoaderData, useNavigation } from "@remix-run/react";
 import { useState } from "react";
-import { deletePostById, getAllPosts } from "~/lib/posts/post.service";
+import { deletePostById, getAllPosts, type Post } from "~/lib/posts/post.service";
+import { getAccommodations } from "~/lib/accommodations/accommodation.service";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { cn } from "~/lib/utils/cn";
@@ -15,6 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
+import { AccommodationCarousel } from "~/components/accommodation-carousel";
 
 export const meta: MetaFunction = () => {
   return [
@@ -24,8 +26,15 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const posts = await getAllPosts();
-  return json({ posts });
+  const [posts, accommodations] = await Promise.all([
+    getAllPosts(),
+    getAccommodations({ pageSize: 10, pageNumber: 1 }),
+  ]);
+  
+  return json({ 
+    posts, 
+    accommodations 
+  });
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -98,7 +107,7 @@ function DeleteDialog({ postId, postTitle, isDeleting }: { postId: string; postT
 }
 
 export default function Index() {
-  const { posts } = useLoaderData<typeof loader>();
+  const { posts, accommodations } = useLoaderData<typeof loader>();
   const navigation = useNavigation();
 
   return (
@@ -122,6 +131,10 @@ export default function Index() {
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h1 className="text-4xl font-bold mb-8">All Posts</h1>
 
+        {/* Accommodations Carousel */}
+        <AccommodationCarousel accommodations={accommodations} />
+
+        {/* Posts Grid */}
         {posts.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-muted-foreground text-lg mb-4">No posts yet.</p>
