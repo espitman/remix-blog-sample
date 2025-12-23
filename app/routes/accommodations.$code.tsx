@@ -1,11 +1,11 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import { getAccommodationDetail } from "~/lib/accommodations/accommodation.service";
+import { getAccommodationDetail, getAccommodationReviewSummary } from "~/lib/accommodations/accommodation.service";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { cn } from "~/lib/utils/cn";
-import { ArrowRight, MapPin, Users, Bed, Bath, Home, Star, CheckCircle2 } from "lucide-react";
+import { ArrowRight, MapPin, Users, Bed, Bath, Home, Star, CheckCircle2, ThumbsUp, ThumbsDown, MessageSquare } from "lucide-react";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   if (!data?.accommodation) {
@@ -25,17 +25,20 @@ export async function loader({ params }: LoaderFunctionArgs) {
     throw new Response("Invalid accommodation code", { status: 400 });
   }
 
-  const accommodation = await getAccommodationDetail(Number(code));
+  const [accommodation, reviewSummary] = await Promise.all([
+    getAccommodationDetail(Number(code)),
+    getAccommodationReviewSummary(Number(code)),
+  ]);
 
   if (!accommodation) {
     throw new Response("Accommodation not found", { status: 404 });
   }
 
-  return json({ accommodation });
+  return json({ accommodation, reviewSummary });
 }
 
 export default function AccommodationDetail() {
-  const { accommodation } = useLoaderData<typeof loader>();
+  const { accommodation, reviewSummary } = useLoaderData<typeof loader>();
 
   return (
     <div className="bg-background min-h-screen">
@@ -242,6 +245,89 @@ export default function AccommodationDetail() {
                       </div>
                     </div>
                   ))}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Review Summary */}
+            {reviewSummary && (
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center gap-2">
+                    <MessageSquare className="w-5 h-5 text-primary" />
+                    <CardTitle>خلاصه نظرات مهمانان</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Overall Sentiment & Recommendation */}
+                  <div className="flex items-center gap-4 p-4 rounded-lg bg-muted">
+                    <div className="flex items-center gap-2">
+                      {reviewSummary.overall_sentiment === "positive" ? (
+                        <ThumbsUp className="w-6 h-6 text-green-600" />
+                      ) : reviewSummary.overall_sentiment === "negative" ? (
+                        <ThumbsDown className="w-6 h-6 text-red-600" />
+                      ) : (
+                        <MessageSquare className="w-6 h-6 text-yellow-600" />
+                      )}
+                      <span className="font-semibold">
+                        {reviewSummary.overall_sentiment === "positive" 
+                          ? "نظرات مثبت" 
+                          : reviewSummary.overall_sentiment === "negative"
+                          ? "نظرات منفی"
+                          : "نظرات خنثی"}
+                      </span>
+                    </div>
+                    {reviewSummary.recommendation && (
+                      <div className="flex items-center gap-2 text-green-600">
+                        <CheckCircle2 className="w-5 h-5" />
+                        <span className="font-semibold">توصیه می‌شود</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Summary */}
+                  <div>
+                    <h4 className="font-semibold mb-3 text-right">خلاصه</h4>
+                    <p className="text-muted-foreground leading-relaxed text-right">
+                      {reviewSummary.summary}
+                    </p>
+                  </div>
+
+                  {/* Strengths */}
+                  {reviewSummary.strengths && reviewSummary.strengths.length > 0 && (
+                    <div>
+                      <h4 className="font-semibold mb-3 text-right flex items-center gap-2">
+                        <ThumbsUp className="w-5 h-5 text-green-600" />
+                        نقاط قوت
+                      </h4>
+                      <ul className="space-y-2">
+                        {reviewSummary.strengths.map((strength, index) => (
+                          <li key={index} className="flex items-start gap-3 text-right">
+                            <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                            <span className="text-muted-foreground">{strength}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Weaknesses */}
+                  {reviewSummary.weaknesses && reviewSummary.weaknesses.length > 0 && (
+                    <div>
+                      <h4 className="font-semibold mb-3 text-right flex items-center gap-2">
+                        <ThumbsDown className="w-5 h-5 text-orange-600" />
+                        نقاط ضعف
+                      </h4>
+                      <ul className="space-y-2">
+                        {reviewSummary.weaknesses.map((weakness, index) => (
+                          <li key={index} className="flex items-start gap-3 text-right">
+                            <span className="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center text-orange-600">•</span>
+                            <span className="text-muted-foreground">{weakness}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             )}

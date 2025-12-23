@@ -215,3 +215,12 @@ export type AccommodationDetailResponse = {
   };
 };
 
+// Review Summary types
+export type ReviewSummary = {
+  overall_sentiment: "positive" | "negative" | "neutral";
+  recommendation: boolean;
+  strengths: string[];
+  summary: string;
+  weaknesses: string[];
+};
+

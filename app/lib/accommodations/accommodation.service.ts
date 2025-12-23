@@ -4,6 +4,7 @@ import type {
   AccommodationSearchParams,
   AccommodationDetail,
   AccommodationDetailResponse,
+  ReviewSummary,
 } from "./accommodation.types";
 
 export type { 
@@ -12,6 +13,7 @@ export type {
   AccommodationSearchParams,
   AccommodationDetail,
   AccommodationDetailResponse,
+  ReviewSummary,
 } from "./accommodation.types";
 
 const JABAMA_API_URL =
@@ -91,6 +93,33 @@ export async function getAccommodationDetail(code: number): Promise<Accommodatio
     return data.result.item || null;
   } catch (error) {
     console.error("Error fetching accommodation detail:", error);
+    return null;
+  }
+}
+
+/**
+ * Fetch review summary for accommodation by code
+ */
+export async function getAccommodationReviewSummary(code: number): Promise<ReviewSummary | null> {
+  try {
+    const response = await fetch(
+      `https://jabama-comments-api.liara.run/summarize/${code}?model=gpt-4.1-nano`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch review summary: ${response.statusText}`);
+    }
+
+    const data: ReviewSummary = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching review summary:", error);
     return null;
   }
 }
