@@ -1,3 +1,4 @@
+import { Link } from "@remix-run/react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -65,10 +66,10 @@ export function AccommodationCarousel({ accommodations }: { accommodations: Acco
         }}
       >
         {accommodations.map((accommodation) => (
-          <Card
-            key={accommodation.id}
-            className="min-w-[340px] max-w-[340px] flex-shrink-0 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-2 hover:border-primary/20 group"
-          >
+          <Link key={accommodation.id} to={`/accommodations/${accommodation.code}`}>
+            <Card
+              className="min-w-[340px] max-w-[340px] flex-shrink-0 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-2 hover:border-primary/20 group cursor-pointer"
+            >
             <div className="w-full h-56 overflow-hidden rounded-t-lg relative">
               <img
                 src={accommodation.image}
@@ -144,6 +145,7 @@ export function AccommodationCarousel({ accommodations }: { accommodations: Acco
               </div>
             </CardContent>
           </Card>
+          </Link>
         ))}
       </div>
 

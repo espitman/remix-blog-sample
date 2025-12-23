@@ -82,3 +82,136 @@ export type AccommodationSearchParams = {
   pageNumber?: number;
 };
 
+// Detail types
+export type AccommodationDetailAmenity = {
+  id: string;
+  icon: {
+    url: string;
+  };
+  title: {
+    en: string;
+    fa: string;
+  };
+};
+
+export type AccommodationDetailBadge = {
+  name: string;
+  title: string;
+  icon: string;
+  data: string[];
+  helper?: string | null;
+};
+
+export type AccommodationDetailBadges = {
+  main: AccommodationDetailBadge[];
+  secondary: AccommodationDetailBadge[];
+  data: unknown[];
+};
+
+export type AccommodationDetail = {
+  id: string;
+  code: number;
+  title: string;
+  alibabaTitle: string;
+  description: string;
+  checkIn: string;
+  checkOut: string;
+  minNight: number;
+  status: string;
+  reservationType: string;
+  type: string;
+  capacity: {
+    beds: {
+      twin: number;
+      single: number;
+      double: number;
+      mattress: number;
+    };
+    guests: {
+      base: number;
+      extra: number;
+    };
+  };
+  price: {
+    base: number;
+    weekend: number;
+    holiday: number;
+    extraPeople: {
+      base: number;
+      weekend: number;
+      holiday: number;
+    };
+  };
+  placeImages: Array<{
+    type: string;
+    url: string;
+    caption: string;
+  }>;
+  amenities: AccommodationDetailAmenity[];
+  accommodationMetrics: AccommodationMetrics;
+  placeOfResidence: {
+    area: {
+      city: {
+        name: { fa: string; en: string };
+        province: {
+          name: { fa: string; en: string };
+        };
+      };
+    };
+    location: {
+      lng: number;
+      lat: number;
+    };
+  };
+  rateAndReview: {
+    count: number;
+    score: number;
+  };
+  badges: AccommodationDetailBadges;
+  extraDescription: Array<{
+    title: string;
+    subTitle: string;
+    text: string;
+  }>;
+  cancellationPolicyText: string;
+  cancellationPolicyDetails: {
+    title: string;
+    beforeCheckIn: {
+      title: string;
+      text: string;
+      color: string;
+    };
+    untilCheckIn: {
+      title: string;
+      text: string;
+      color: string;
+    };
+    afterCheckIn: {
+      title: string;
+      text: string;
+      color: string;
+    };
+  };
+  nearbyCentersV2: Array<{
+    title: string;
+    items: Array<{
+      key: string;
+      value: string;
+      accessibleBy: string;
+    }>;
+  }>;
+  hostProfile: {
+    items: Array<{
+      icon: string;
+      text: string;
+      subText: string;
+    }>;
+  };
+};
+
+export type AccommodationDetailResponse = {
+  result: {
+    item: AccommodationDetail;
+  };
+};
+

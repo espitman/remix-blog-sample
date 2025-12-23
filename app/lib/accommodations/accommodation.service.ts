@@ -2,9 +2,17 @@ import type {
   Accommodation,
   AccommodationSearchResponse,
   AccommodationSearchParams,
+  AccommodationDetail,
+  AccommodationDetailResponse,
 } from "./accommodation.types";
 
-export type { Accommodation, AccommodationSearchResponse, AccommodationSearchParams } from "./accommodation.types";
+export type { 
+  Accommodation, 
+  AccommodationSearchResponse, 
+  AccommodationSearchParams,
+  AccommodationDetail,
+  AccommodationDetailResponse,
+} from "./accommodation.types";
 
 const JABAMA_API_URL =
   "https://gw.jabama.com/api/taraaz/v2/search/merchandising/legacy-plp/all-apartment?platform=mobile&allowEmptyCity=true&hasUnitRoom=true&guarantees=false";
@@ -51,6 +59,39 @@ export async function getAccommodations(
     console.error("Error fetching accommodations:", error);
     // Return empty array on error instead of throwing
     return [];
+  }
+}
+
+/**
+ * Fetch accommodation detail by code
+ */
+export async function getAccommodationDetail(code: number): Promise<AccommodationDetail | null> {
+  try {
+    const response = await fetch(
+      `https://gw.jabama.com/api/v1/accommodations/${code}?reversePeriods=true&withPanoramic=true`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "*/*",
+          "Accept-Language": "en-US,en;q=0.9,fa-IR;q=0.8,fa;q=0.7",
+          "Content-Type": "application/json",
+          Origin: "https://www.jabama.com",
+          Referer: "https://www.jabama.com/",
+          "User-Agent":
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch accommodation detail: ${response.statusText}`);
+    }
+
+    const data: AccommodationDetailResponse = await response.json();
+    return data.result.item || null;
+  } catch (error) {
+    console.error("Error fetching accommodation detail:", error);
+    return null;
   }
 }
 
