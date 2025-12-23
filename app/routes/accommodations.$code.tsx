@@ -111,7 +111,12 @@ export default function AccommodationDetail() {
                   <img
                     src={image.url}
                     alt={image.caption || accommodation.title}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    className={cn(
+                      "w-full object-cover hover:scale-105 transition-transform duration-300",
+                      index === 0 
+                        ? "h-[400px] md:h-[520px]" 
+                        : "h-[200px] md:h-[250px]"
+                    )}
                   />
                 </div>
               ))}
