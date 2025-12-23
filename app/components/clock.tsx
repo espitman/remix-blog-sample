@@ -23,8 +23,8 @@ export function Timer() {
   };
 
   return (
-    <div className="text-sm">
-      <p className="text-muted-foreground mb-1">Session Timer</p>
+    <div className="text-sm text-right">
+      <p className="text-muted-foreground mb-1">تایمر جلسه</p>
       <p className="text-lg font-mono font-semibold">{formatTime(seconds)}</p>
     </div>
   );

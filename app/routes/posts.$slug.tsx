@@ -15,6 +15,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
+import { ArrowRight } from "lucide-react";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const post = await getPostBySlug(params.slug!);
@@ -56,14 +57,14 @@ export default function PostSlug() {
       <nav className="border-b">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <Link to="/" className="text-2xl font-bold">
-              Remix Blog
+            <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+              وبلاگ Remix
             </Link>
             <Link
               to="/admin/new"
               className={cn(buttonVariants())}
             >
-              New Post
+              پست جدید
             </Link>
           </div>
         </div>
@@ -73,9 +74,10 @@ export default function PostSlug() {
         <div className="flex justify-between items-center mb-6">
           <Link
             to="/"
-            className={cn(buttonVariants({ variant: "ghost" }))}
+            className={cn(buttonVariants({ variant: "ghost" }), "flex items-center gap-2")}
           >
-            ← Back to all posts
+            بازگشت به همه پست‌ها
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
@@ -91,25 +93,25 @@ export default function PostSlug() {
           )}
           <CardHeader>
             <div className="flex justify-between items-start gap-4">
-              <CardTitle className="text-4xl flex-1">{post.title}</CardTitle>
+              <CardTitle className="text-4xl flex-1 text-right">{post.title}</CardTitle>
               <div className="flex gap-2">
                 <Link
                   to={`/admin/edit/${post.slug}`}
                   className={cn(buttonVariants({ size: "sm" }))}
                 >
-                  Edit
+                  ویرایش
                 </Link>
                 <Dialog open={open} onOpenChange={setOpen}>
                   <DialogTrigger asChild>
                     <Button variant="destructive" size="sm" disabled={isDeleting}>
-                      Delete
+                      حذف
                     </Button>
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent className="text-right">
                     <DialogHeader>
-                      <DialogTitle>Are you sure?</DialogTitle>
+                      <DialogTitle>آیا مطمئن هستید؟</DialogTitle>
                       <DialogDescription>
-                        Are you sure you want to delete "{post.title}"? This action cannot be undone.
+                        آیا مطمئن هستید که می‌خواهید "{post.title}" را حذف کنید؟ این عمل قابل بازگشت نیست.
                       </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
@@ -118,7 +120,7 @@ export default function PostSlug() {
                         onClick={() => setOpen(false)}
                         disabled={isDeleting}
                       >
-                        Cancel
+                        انصراف
                       </Button>
                       <Form method="post">
                         <input type="hidden" name="intent" value="delete" />
@@ -128,7 +130,7 @@ export default function PostSlug() {
                           disabled={isDeleting}
                           onClick={() => setOpen(false)}
                         >
-                          {isDeleting ? "Deleting..." : "Delete"}
+                          {isDeleting ? "در حال حذف..." : "حذف"}
                         </Button>
                       </Form>
                     </DialogFooter>
@@ -136,8 +138,8 @@ export default function PostSlug() {
                 </Dialog>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground mt-2">
-              {new Date(post.createdAt).toLocaleString("en-US", {
+            <p className="text-sm text-muted-foreground mt-2 text-right">
+              {new Date(post.createdAt).toLocaleString("fa-IR", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
@@ -147,7 +149,7 @@ export default function PostSlug() {
             </p>
           </CardHeader>
           <CardContent>
-            <p className="whitespace-pre-wrap leading-relaxed">
+            <p className="whitespace-pre-wrap leading-relaxed text-right">
               {post.content}
             </p>
           </CardContent>

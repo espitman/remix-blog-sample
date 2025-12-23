@@ -17,11 +17,12 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { AccommodationCarousel } from "~/components/accommodation-carousel";
+import { ArrowRight } from "lucide-react";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Remix Blog" },
-    { name: "description", content: "Welcome to Remix Blog!" },
+    { title: "وبلاگ Remix" },
+    { name: "description", content: "به وبلاگ Remix خوش آمدید!" },
   ];
 };
 
@@ -70,14 +71,14 @@ function DeleteDialog({ postId, postTitle, isDeleting }: { postId: string; postT
           onClick={(e) => e.stopPropagation()}
           className="flex-1"
         >
-          Delete
+          حذف
         </Button>
       </DialogTrigger>
-      <DialogContent onClick={(e) => e.stopPropagation()}>
+      <DialogContent onClick={(e) => e.stopPropagation()} className="text-right">
         <DialogHeader>
-          <DialogTitle>Are you sure?</DialogTitle>
+          <DialogTitle>آیا مطمئن هستید؟</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete "{postTitle}"? This action cannot be undone.
+            آیا مطمئن هستید که می‌خواهید "{postTitle}" را حذف کنید؟ این عمل قابل بازگشت نیست.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -86,7 +87,7 @@ function DeleteDialog({ postId, postTitle, isDeleting }: { postId: string; postT
             onClick={() => setOpen(false)}
             disabled={isDeleting}
           >
-            Cancel
+            انصراف
           </Button>
           <Form method="post" className="inline">
             <input type="hidden" name="intent" value="delete" />
@@ -97,7 +98,7 @@ function DeleteDialog({ postId, postTitle, isDeleting }: { postId: string; postT
               disabled={isDeleting}
               onClick={() => setOpen(false)}
             >
-              {isDeleting ? "Deleting..." : "Delete"}
+              {isDeleting ? "در حال حذف..." : "حذف"}
             </Button>
           </Form>
         </DialogFooter>
@@ -117,13 +118,13 @@ export default function Index() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              Remix Blog
+              وبلاگ Remix
             </Link>
             <Link
               to="/admin/new"
               className={cn(buttonVariants({ variant: "default" }))}
             >
-              New Post
+              پست جدید
             </Link>
           </div>
         </div>
@@ -135,13 +136,14 @@ export default function Index() {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
             <div className="max-w-3xl mx-auto text-center">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-                Welcome to{" "}
+                به{" "}
                 <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                  Remix Blog
+                  وبلاگ Remix
                 </span>
+                {" "}خوش آمدید
               </h1>
               <p className="text-xl text-muted-foreground mb-8">
-                Discover amazing accommodations and read our latest posts
+                اقامتگاه‌های فوق‌العاده را کشف کنید و آخرین پست‌های ما را بخوانید
               </p>
             </div>
           </div>
@@ -157,10 +159,10 @@ export default function Index() {
         {/* Posts Section */}
         <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
           <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Latest Posts</h2>
+            <div className="text-right">
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight">آخرین پست‌ها</h2>
               <p className="text-muted-foreground mt-2">
-                Explore our collection of articles and stories
+                مجموعه مقالات و داستان‌های ما را کاوش کنید
               </p>
             </div>
           </div>
@@ -183,15 +185,15 @@ export default function Index() {
                     />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">No posts yet</h3>
+                <h3 className="text-xl font-semibold mb-2">هنوز پستی وجود ندارد</h3>
                 <p className="text-muted-foreground mb-6">
-                  Get started by creating your first blog post
+                  با ایجاد اولین پست وبلاگ خود شروع کنید
                 </p>
                 <Link
                   to="/admin/new"
                   className={cn(buttonVariants({ variant: "default", size: "lg" }))}
                 >
-                  Create your first post
+                  اولین پست خود را ایجاد کنید
                 </Link>
               </div>
             </div>
@@ -236,17 +238,17 @@ export default function Index() {
                     )}
                     <CardHeader className="pb-3">
                       <Link to={`/posts/${post.slug}`}>
-                        <CardTitle className="line-clamp-2 text-xl group-hover:text-primary transition-colors">
+                        <CardTitle className="line-clamp-2 text-xl group-hover:text-primary transition-colors text-right">
                           {post.title}
                         </CardTitle>
-                        <CardDescription className="line-clamp-3 mt-3 text-sm">
+                        <CardDescription className="line-clamp-3 mt-3 text-sm text-right">
                           {post.content.substring(0, 150)}
                           {post.content.length > 150 ? "..." : ""}
                         </CardDescription>
                       </Link>
                     </CardHeader>
                     <CardContent className="pt-0">
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground text-right">
                         <svg
                           className="w-4 h-4"
                           fill="none"
@@ -261,9 +263,9 @@ export default function Index() {
                           />
                         </svg>
                         <span>
-                          {new Date(post.createdAt).toLocaleString("en-US", {
+                          {new Date(post.createdAt).toLocaleString("fa-IR", {
                             year: "numeric",
-                            month: "short",
+                            month: "long",
                             day: "numeric",
                             hour: "2-digit",
                             minute: "2-digit",
@@ -277,7 +279,7 @@ export default function Index() {
                         onClick={(e) => e.stopPropagation()}
                         className={cn(buttonVariants({ variant: "outline", size: "sm" }), "flex-1")}
                       >
-                        Edit
+                        ویرایش
                       </Link>
                       <DeleteDialog postId={post.id} postTitle={post.title} isDeleting={isDeleting} />
                     </CardFooter>

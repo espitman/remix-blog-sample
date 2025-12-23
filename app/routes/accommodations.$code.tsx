@@ -5,7 +5,7 @@ import { getAccommodationDetail } from "~/lib/accommodations/accommodation.servi
 import { Button, buttonVariants } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { cn } from "~/lib/utils/cn";
-import { ArrowLeft, MapPin, Users, Bed, Bath, Home, Star, CheckCircle2 } from "lucide-react";
+import { ArrowRight, MapPin, Users, Bed, Bath, Home, Star, CheckCircle2 } from "lucide-react";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   if (!data?.accommodation) {
@@ -50,8 +50,8 @@ export default function AccommodationDetail() {
               to="/"
               className={cn(buttonVariants({ variant: "outline" }))}
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home
+              بازگشت به خانه
+              <ArrowRight className="w-4 h-4 mr-2" />
             </Link>
           </div>
         </div>
@@ -63,8 +63,8 @@ export default function AccommodationDetail() {
           to="/"
           className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to accommodations
+          بازگشت به اقامتگاه‌ها
+          <ArrowRight className="w-4 h-4 mr-2" />
         </Link>
 
         {/* Header Section */}
@@ -81,13 +81,13 @@ export default function AccommodationDetail() {
               <div className="flex items-center gap-2">
                 <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />
                 <span className="font-semibold">{accommodation.rateAndReview.score}</span>
-                <span>({accommodation.rateAndReview.count} reviews)</span>
+                <span>({accommodation.rateAndReview.count} نظر)</span>
               </div>
             )}
             {accommodation.reservationType === "instant" && (
               <div className="flex items-center gap-2 text-green-600">
                 <CheckCircle2 className="w-4 h-4" />
-                <span>Instant Booking</span>
+                <span>رزرو آنی</span>
               </div>
             )}
           </div>
@@ -123,10 +123,10 @@ export default function AccommodationDetail() {
             {accommodation.description && (
               <Card>
                 <CardHeader>
-                  <CardTitle>About this place</CardTitle>
+                  <CardTitle>درباره این اقامتگاه</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="whitespace-pre-line text-muted-foreground">
+                  <p className="whitespace-pre-line text-muted-foreground text-right">
                     {accommodation.description}
                   </p>
                 </CardContent>
@@ -137,11 +137,11 @@ export default function AccommodationDetail() {
             {accommodation.extraDescription && accommodation.extraDescription.length > 0 && (
               <Card>
                 <CardHeader>
-                  <CardTitle>More Information</CardTitle>
+                  <CardTitle>اطلاعات بیشتر</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {accommodation.extraDescription.map((desc, index) => (
-                    <div key={index}>
+                    <div key={index} className="text-right">
                       <h3 className="font-semibold mb-2">{desc.title}</h3>
                       {desc.subTitle && (
                         <p className="text-sm text-muted-foreground mb-2">{desc.subTitle}</p>
@@ -157,7 +157,7 @@ export default function AccommodationDetail() {
             {accommodation.amenities && accommodation.amenities.length > 0 && (
               <Card>
                 <CardHeader>
-                  <CardTitle>What this place offers</CardTitle>
+                  <CardTitle>امکانات اقامتگاه</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -168,7 +168,7 @@ export default function AccommodationDetail() {
                           alt={amenity.title.fa}
                           className="w-6 h-6"
                         />
-                        <span className="text-sm">{amenity.title.fa}</span>
+                        <span className="text-sm text-right">{amenity.title.fa}</span>
                       </div>
                     ))}
                   </div>
@@ -180,10 +180,10 @@ export default function AccommodationDetail() {
             {accommodation.cancellationPolicyDetails && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Cancellation Policy</CardTitle>
+                  <CardTitle>سیاست لغو رزرو</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground text-right">
                     {accommodation.cancellationPolicyText}
                   </p>
                   <div className="space-y-3">
@@ -226,7 +226,7 @@ export default function AccommodationDetail() {
             {accommodation.nearbyCentersV2 && accommodation.nearbyCentersV2.length > 0 && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Nearby Places</CardTitle>
+                  <CardTitle>مکان‌های نزدیک</CardTitle>
                 </CardHeader>
                 <CardContent>
                   {accommodation.nearbyCentersV2.map((center, index) => (
@@ -234,9 +234,9 @@ export default function AccommodationDetail() {
                       <h4 className="font-semibold mb-3">{center.title}</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         {center.items.map((item, itemIndex) => (
-                          <div key={itemIndex} className="flex justify-between items-center p-2 rounded border">
-                            <span className="text-sm text-muted-foreground">{item.key}</span>
+                          <div key={itemIndex} className="flex justify-between items-center p-2 rounded border text-right">
                             <span className="text-sm font-medium">{item.value}</span>
+                            <span className="text-sm text-muted-foreground">{item.key}</span>
                           </div>
                         ))}
                       </div>
@@ -255,29 +255,29 @@ export default function AccommodationDetail() {
                   <span className="text-3xl font-bold">
                     {accommodation.price.base.toLocaleString("fa-IR")}
                   </span>
-                  <span className="text-muted-foreground">Toman</span>
-                  <span className="text-sm text-muted-foreground">/ night</span>
+                  <span className="text-muted-foreground">تومان</span>
+                  <span className="text-sm text-muted-foreground">/ شب</span>
                 </div>
                 {accommodation.price.weekend && (
-                  <p className="text-sm text-muted-foreground">
-                    Weekend: {accommodation.price.weekend.toLocaleString("fa-IR")} Toman
+                  <p className="text-sm text-muted-foreground text-right">
+                    آخر هفته: {accommodation.price.weekend.toLocaleString("fa-IR")} تومان
                   </p>
                 )}
                 {accommodation.price.holiday && (
-                  <p className="text-sm text-muted-foreground">
-                    Holiday: {accommodation.price.holiday.toLocaleString("fa-IR")} Toman
+                  <p className="text-sm text-muted-foreground text-right">
+                    تعطیلات: {accommodation.price.holiday.toLocaleString("fa-IR")} تومان
                   </p>
                 )}
               </CardHeader>
               <CardContent className="space-y-4">
                 {/* Check-in/Check-out */}
-                <div className="grid grid-cols-2 gap-4 p-4 border rounded-lg">
+                <div className="grid grid-cols-2 gap-4 p-4 border rounded-lg text-right">
                   <div>
-                    <p className="text-xs text-muted-foreground mb-1">Check-in</p>
+                    <p className="text-xs text-muted-foreground mb-1">ورود</p>
                     <p className="font-semibold">{accommodation.checkIn}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground mb-1">Check-out</p>
+                    <p className="text-xs text-muted-foreground mb-1">خروج</p>
                     <p className="font-semibold">{accommodation.checkOut}</p>
                   </div>
                 </div>
@@ -286,23 +286,23 @@ export default function AccommodationDetail() {
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <Users className="w-5 h-5 text-muted-foreground" />
-                    <div>
+                    <div className="text-right">
                       <p className="font-semibold">
-                        {accommodation.capacity.guests.base} guests
-                        {accommodation.capacity.guests.extra > 0 && ` + ${accommodation.capacity.guests.extra} extra`}
+                        {accommodation.capacity.guests.base} مهمان
+                        {accommodation.capacity.guests.extra > 0 && ` + ${accommodation.capacity.guests.extra} اضافه`}
                       </p>
                     </div>
                   </div>
                   {accommodation.accommodationMetrics.bedroomsCount > 0 && (
                     <div className="flex items-center gap-2">
                       <Bed className="w-5 h-5 text-muted-foreground" />
-                      <div>
+                      <div className="text-right">
                         <p className="font-semibold">
-                          {accommodation.accommodationMetrics.bedroomsCount} Bedroom{accommodation.accommodationMetrics.bedroomsCount > 1 ? "s" : ""}
+                          {accommodation.accommodationMetrics.bedroomsCount} اتاق خواب
                         </p>
                         <p className="text-sm text-muted-foreground">
-                          {accommodation.capacity.beds.double} Double bed{accommodation.capacity.beds.double > 1 ? "s" : ""}
-                          {accommodation.capacity.beds.mattress > 0 && `, ${accommodation.capacity.beds.mattress} Mattress${accommodation.capacity.beds.mattress > 1 ? "es" : ""}`}
+                          {accommodation.capacity.beds.double} تخت دو نفره
+                          {accommodation.capacity.beds.mattress > 0 && `، ${accommodation.capacity.beds.mattress} رختخواب سنتی`}
                         </p>
                       </div>
                     </div>
@@ -310,13 +310,13 @@ export default function AccommodationDetail() {
                   {accommodation.accommodationMetrics.bathroomsCount > 0 && (
                     <div className="flex items-center gap-2">
                       <Bath className="w-5 h-5 text-muted-foreground" />
-                      <div>
+                      <div className="text-right">
                         <p className="font-semibold">
-                          {accommodation.accommodationMetrics.bathroomsCount} Bathroom{accommodation.accommodationMetrics.bathroomsCount > 1 ? "s" : ""}
+                          {accommodation.accommodationMetrics.bathroomsCount} حمام
                         </p>
                         {accommodation.accommodationMetrics.iranianToiletsCount > 0 && (
                           <p className="text-sm text-muted-foreground">
-                            {accommodation.accommodationMetrics.iranianToiletsCount} Iranian toilet{accommodation.accommodationMetrics.iranianToiletsCount > 1 ? "s" : ""}
+                            {accommodation.accommodationMetrics.iranianToiletsCount} سرویس ایرانی
                           </p>
                         )}
                       </div>
@@ -325,11 +325,11 @@ export default function AccommodationDetail() {
                   {accommodation.accommodationMetrics.areaSize > 0 && (
                     <div className="flex items-center gap-2">
                       <Home className="w-5 h-5 text-muted-foreground" />
-                      <div>
+                      <div className="text-right">
                         <p className="font-semibold">
-                          {accommodation.accommodationMetrics.areaSize} m²
+                          {accommodation.accommodationMetrics.areaSize} متر مربع
                         </p>
-                        <p className="text-sm text-muted-foreground">Area size</p>
+                        <p className="text-sm text-muted-foreground">مساحت</p>
                       </div>
                     </div>
                   )}
@@ -337,9 +337,9 @@ export default function AccommodationDetail() {
 
                 {/* Min Nights */}
                 {accommodation.minNight > 0 && (
-                  <div className="p-3 bg-muted rounded-lg">
+                  <div className="p-3 bg-muted rounded-lg text-right">
                     <p className="text-sm">
-                      <span className="font-semibold">Minimum stay:</span> {accommodation.minNight} night{accommodation.minNight > 1 ? "s" : ""}
+                      <span className="font-semibold">حداقل اقامت:</span> {accommodation.minNight} شب
                     </p>
                   </div>
                 )}
@@ -347,16 +347,16 @@ export default function AccommodationDetail() {
                 {/* Badges */}
                 {accommodation.badges?.main && accommodation.badges.main.length > 0 && (
                   <div className="space-y-3 pt-4 border-t">
-                    <h4 className="font-semibold">Highlights</h4>
+                    <h4 className="font-semibold text-right">ویژگی‌های برجسته</h4>
                     {accommodation.badges.main.slice(0, 3).map((badge, index) => (
                       <div key={index} className="flex items-start gap-3">
                         <img src={badge.icon} alt={badge.title} className="w-6 h-6 flex-shrink-0" />
-                        <div>
+                        <div className="text-right">
                           <p className="font-semibold text-sm">{badge.title}</p>
                           {badge.data && badge.data.length > 0 && (
                             <ul className="text-xs text-muted-foreground mt-1 space-y-1">
                               {badge.data.slice(0, 2).map((item, itemIndex) => (
-                                <li key={itemIndex}>• {item}</li>
+                                <li key={itemIndex} className="text-right">• {item}</li>
                               ))}
                             </ul>
                           )}
@@ -369,12 +369,12 @@ export default function AccommodationDetail() {
                 {/* Host Profile */}
                 {accommodation.hostProfile && accommodation.hostProfile.items.length > 0 && (
                   <div className="pt-4 border-t">
-                    <h4 className="font-semibold mb-3">Host Information</h4>
+                    <h4 className="font-semibold mb-3 text-right">اطلاعات میزبان</h4>
                     <div className="space-y-2">
                       {accommodation.hostProfile.items.map((item, index) => (
                         <div key={index} className="flex items-center gap-3">
                           <img src={item.icon} alt="" className="w-5 h-5" />
-                          <div>
+                          <div className="text-right">
                             <p className="font-semibold text-sm">{item.text}</p>
                             <p className="text-xs text-muted-foreground">{item.subText}</p>
                           </div>
@@ -386,7 +386,7 @@ export default function AccommodationDetail() {
 
                 {/* Reserve Button */}
                 <Button className="w-full" size="lg">
-                  Reserve Now
+                  رزرو کنید
                 </Button>
               </CardContent>
             </Card>

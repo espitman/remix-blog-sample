@@ -8,9 +8,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/com
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Alert, AlertDescription } from "~/components/ui/alert";
+import { ArrowRight } from "lucide-react";
 
 export const meta: MetaFunction = () => {
-  return [{ title: "Create New Post - Remix Blog" }];
+  return [{ title: "ایجاد پست جدید - وبلاگ Remix" }];
 };
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -52,14 +53,15 @@ export default function AdminNew() {
       <nav className="border-b">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <Link to="/" className="text-2xl font-bold">
-              Remix Blog
+            <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+              وبلاگ Remix
             </Link>
             <Link
               to="/"
-              className={cn(buttonVariants({ variant: "outline" }))}
+              className={cn(buttonVariants({ variant: "outline" }), "flex items-center gap-2")}
             >
-              Back to Posts
+              بازگشت به پست‌ها
+              <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
@@ -68,85 +70,89 @@ export default function AdminNew() {
       <main className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Card>
           <CardHeader>
-            <CardTitle className="text-4xl">Create New Post</CardTitle>
-            <CardDescription>
-              Fill in the details below to create a new blog post.
+            <CardTitle className="text-4xl text-right">ایجاد پست جدید</CardTitle>
+            <CardDescription className="text-right">
+              جزئیات زیر را پر کنید تا یک پست وبلاگ جدید ایجاد کنید.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Form method="post" className="space-y-6">
               {actionData?.error && (
                 <Alert variant="destructive">
-                  <AlertDescription>{actionData.error}</AlertDescription>
+                  <AlertDescription className="text-right">{actionData.error}</AlertDescription>
                 </Alert>
               )}
 
               <div className="space-y-2">
-                <label htmlFor="title" className="text-sm font-medium">
-                  Title
+                <label htmlFor="title" className="text-sm font-medium text-right block">
+                  عنوان
                 </label>
                 <Input
                   id="title"
                   name="title"
                   required
-                  placeholder="Enter post title"
+                  placeholder="عنوان پست را وارد کنید"
+                  className="text-right"
                 />
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="slug" className="text-sm font-medium">
-                  Slug (URL-friendly identifier)
+                <label htmlFor="slug" className="text-sm font-medium text-right block">
+                  شناسه URL (Slug)
                 </label>
                 <Input
                   id="slug"
                   name="slug"
                   required
-                  placeholder="e.g., my-first-post"
+                  placeholder="مثال: my-first-post"
                   pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
-                  title="Slug must contain only lowercase letters, numbers, and hyphens"
+                  title="Slug باید فقط شامل حروف کوچک، اعداد و خط تیره باشد"
+                  className="text-right"
                 />
-                <p className="text-xs text-muted-foreground">
-                  Use lowercase letters, numbers, and hyphens only
+                <p className="text-xs text-muted-foreground text-right">
+                  فقط از حروف کوچک، اعداد و خط تیره استفاده کنید
                 </p>
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="imageUrl" className="text-sm font-medium">
-                  Image URL (Optional)
+                <label htmlFor="imageUrl" className="text-sm font-medium text-right block">
+                  آدرس تصویر (اختیاری)
                 </label>
                 <Input
                   id="imageUrl"
                   name="imageUrl"
                   type="url"
                   placeholder="https://example.com/image.jpg"
+                  className="text-right"
                 />
-                <p className="text-xs text-muted-foreground">
-                  Enter a URL for the post image
+                <p className="text-xs text-muted-foreground text-right">
+                  آدرس URL تصویر پست را وارد کنید
                 </p>
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="content" className="text-sm font-medium">
-                  Content
+                <label htmlFor="content" className="text-sm font-medium text-right block">
+                  محتوا
                 </label>
                 <Textarea
                   id="content"
                   name="content"
                   required
                   rows={12}
-                  placeholder="Write your post content here..."
+                  placeholder="محتوای پست خود را اینجا بنویسید..."
+                  className="text-right"
                 />
               </div>
 
               <div className="flex gap-4">
                 <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? "Creating..." : "Create Post"}
+                  {isSubmitting ? "در حال ایجاد..." : "ایجاد پست"}
                 </Button>
                 <Link
                   to="/"
                   className={cn(buttonVariants({ variant: "outline" }))}
                 >
-                  Cancel
+                  انصراف
                 </Link>
               </div>
             </Form>

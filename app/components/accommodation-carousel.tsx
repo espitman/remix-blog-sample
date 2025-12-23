@@ -31,21 +31,13 @@ export function AccommodationCarousel({ accommodations }: { accommodations: Acco
   return (
     <div className="w-full">
       <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Featured Accommodations</h2>
+        <div className="text-right">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">اقامتگاه‌های ویژه</h2>
           <p className="text-muted-foreground mt-2">
-            Discover amazing places to stay
+            مکان‌های فوق‌العاده برای اقامت را کشف کنید
           </p>
         </div>
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => scroll("left")}
-            className="h-10 w-10 rounded-full"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </Button>
           <Button
             variant="outline"
             size="icon"
@@ -53,6 +45,14 @@ export function AccommodationCarousel({ accommodations }: { accommodations: Acco
             className="h-10 w-10 rounded-full"
           >
             <ChevronRight className="h-5 w-5" />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => scroll("left")}
+            className="h-10 w-10 rounded-full"
+          >
+            <ChevronLeft className="h-5 w-5" />
           </Button>
         </div>
       </div>
@@ -78,21 +78,21 @@ export function AccommodationCarousel({ accommodations }: { accommodations: Acco
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               {accommodation.badges.length > 0 && (
-                <div className="absolute top-3 right-3 bg-background/95 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg">
+                <div className="absolute top-3 left-3 bg-background/95 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg">
                   {accommodation.badges[0].name}
                 </div>
               )}
               {accommodation.verified && (
-                <div className="absolute top-3 left-3 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                <div className="absolute top-3 right-3 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
                   <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  Verified
+                  تایید شده
                 </div>
               )}
             </div>
             <CardHeader className="pb-3">
-              <CardTitle className="line-clamp-2 text-lg group-hover:text-primary transition-colors">
+              <CardTitle className="line-clamp-2 text-lg group-hover:text-primary transition-colors text-right">
                 {accommodation.name}
               </CardTitle>
               <div className="flex items-center gap-3 mt-3">
@@ -105,40 +105,40 @@ export function AccommodationCarousel({ accommodations }: { accommodations: Acco
                       {accommodation.rate_review.score}
                     </span>
                     <span className="text-xs text-muted-foreground">
-                      ({accommodation.rate_review.count} reviews)
+                      ({accommodation.rate_review.count} نظر)
                     </span>
                   </div>
                 )}
               </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-2">
+              <div className="space-y-2 text-right">
                 <div className="text-sm text-muted-foreground">
                   <p>
-                    {accommodation.location.city}, {accommodation.location.province}
+                    {accommodation.location.city}، {accommodation.location.province}
                   </p>
                   {accommodation.accommodationMetrics.bedroomsCount > 0 && (
                     <p>
-                      {accommodation.accommodationMetrics.bedroomsCount} Bedrooms
+                      {accommodation.accommodationMetrics.bedroomsCount} اتاق خواب
                       {accommodation.accommodationMetrics.bathroomsCount > 0 &&
-                        ` • ${accommodation.accommodationMetrics.bathroomsCount} Bathrooms`}
+                        ` • ${accommodation.accommodationMetrics.bathroomsCount} حمام`}
                     </p>
                   )}
                   <p>
-                    Capacity: {accommodation.capacity.base}
+                    ظرفیت: {accommodation.capacity.base}
                     {accommodation.capacity.extra > 0 && ` + ${accommodation.capacity.extra}`}
                   </p>
                 </div>
                 <div className="pt-2 border-t">
                   <div className="flex items-baseline gap-2">
+                    <span className="text-sm text-muted-foreground">تومان</span>
                     <span className="text-2xl font-bold">
                       {accommodation.price.discountedPrice.toLocaleString("fa-IR")}
                     </span>
-                    <span className="text-sm text-muted-foreground">Toman</span>
                   </div>
                   {accommodation.price.discountPercent > 0 && (
                     <p className="text-xs text-muted-foreground line-through">
-                      {accommodation.price.mainPrice.toLocaleString("fa-IR")} Toman
+                      {accommodation.price.mainPrice.toLocaleString("fa-IR")} تومان
                     </p>
                   )}
                 </div>
