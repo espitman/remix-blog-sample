@@ -28,25 +28,30 @@ export function AccommodationCarousel({ accommodations }: { accommodations: Acco
   }
 
   return (
-    <div className="w-full py-8">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-bold">Accommodations</h2>
+    <div className="w-full">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Featured Accommodations</h2>
+          <p className="text-muted-foreground mt-2">
+            Discover amazing places to stay
+          </p>
+        </div>
         <div className="flex gap-2">
           <Button
             variant="outline"
             size="icon"
             onClick={() => scroll("left")}
-            className="h-8 w-8"
+            className="h-10 w-10 rounded-full"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-5 w-5" />
           </Button>
           <Button
             variant="outline"
             size="icon"
             onClick={() => scroll("right")}
-            className="h-8 w-8"
+            className="h-10 w-10 rounded-full"
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-5 w-5" />
           </Button>
         </div>
       </div>
@@ -62,39 +67,46 @@ export function AccommodationCarousel({ accommodations }: { accommodations: Acco
         {accommodations.map((accommodation) => (
           <Card
             key={accommodation.id}
-            className="min-w-[320px] max-w-[320px] flex-shrink-0 hover:shadow-lg transition-shadow"
+            className="min-w-[340px] max-w-[340px] flex-shrink-0 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-2 hover:border-primary/20 group"
           >
-            <div className="w-full h-48 overflow-hidden rounded-t-lg relative">
+            <div className="w-full h-56 overflow-hidden rounded-t-lg relative">
               <img
                 src={accommodation.image}
                 alt={accommodation.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               {accommodation.badges.length > 0 && (
-                <div className="absolute top-2 right-2 bg-background/80 backdrop-blur-sm px-2 py-1 rounded text-xs font-semibold">
+                <div className="absolute top-3 right-3 bg-background/95 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg">
                   {accommodation.badges[0].name}
                 </div>
               )}
+              {accommodation.verified && (
+                <div className="absolute top-3 left-3 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Verified
+                </div>
+              )}
             </div>
-            <CardHeader>
-              <CardTitle className="line-clamp-2 text-lg">
+            <CardHeader className="pb-3">
+              <CardTitle className="line-clamp-2 text-lg group-hover:text-primary transition-colors">
                 {accommodation.name}
               </CardTitle>
-              <div className="flex items-center gap-2 mt-2">
+              <div className="flex items-center gap-3 mt-3">
                 {accommodation.rate_review && (
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1.5">
+                    <svg className="w-4 h-4 text-yellow-500 fill-yellow-500" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
                     <span className="text-sm font-semibold">
                       {accommodation.rate_review.score}
                     </span>
                     <span className="text-xs text-muted-foreground">
-                      ({accommodation.rate_review.count})
+                      ({accommodation.rate_review.count} reviews)
                     </span>
                   </div>
-                )}
-                {accommodation.verified && (
-                  <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">
-                    Verified
-                  </span>
                 )}
               </div>
             </CardHeader>
