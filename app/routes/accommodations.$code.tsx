@@ -1,11 +1,12 @@
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
+import { useState, useEffect } from "react";
 import { getAccommodationDetail, getAccommodationReviewSummary } from "~/lib/accommodations/accommodation.service";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { cn } from "~/lib/utils/cn";
-import { ArrowRight, MapPin, Users, Bed, Bath, Home, Star, CheckCircle2, ThumbsUp, ThumbsDown, MessageSquare } from "lucide-react";
+import { ArrowRight, MapPin, Users, Bed, Bath, Home, Star, CheckCircle2, ThumbsUp, ThumbsDown, MessageSquare, ChevronRight, ChevronLeft, X } from "lucide-react";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   if (!data?.accommodation) {
@@ -39,6 +40,66 @@ export async function loader({ params }: LoaderFunctionArgs) {
 
 export default function AccommodationDetail() {
   const { accommodation, reviewSummary } = useLoaderData<typeof loader>();
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+
+  const handleImageClick = (index: number) => {
+    setSelectedImageIndex(index);
+  };
+
+  const handlePrevious = () => {
+    if (selectedImageIndex !== null && accommodation.placeImages) {
+      setSelectedImageIndex(
+        selectedImageIndex === 0 
+          ? accommodation.placeImages.length - 1 
+          : selectedImageIndex - 1
+      );
+    }
+  };
+
+  const handleNext = () => {
+    if (selectedImageIndex !== null && accommodation.placeImages) {
+      setSelectedImageIndex(
+        selectedImageIndex === accommodation.placeImages.length - 1 
+          ? 0 
+          : selectedImageIndex + 1
+      );
+    }
+  };
+
+  const handleClose = () => {
+    setSelectedImageIndex(null);
+  };
+
+  // Keyboard navigation
+  useEffect(() => {
+    if (selectedImageIndex === null || !accommodation.placeImages) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        setSelectedImageIndex(
+          selectedImageIndex === 0 
+            ? accommodation.placeImages!.length - 1 
+            : selectedImageIndex - 1
+        );
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        setSelectedImageIndex(
+          selectedImageIndex === accommodation.placeImages!.length - 1 
+            ? 0 
+            : selectedImageIndex + 1
+        );
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        setSelectedImageIndex(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedImageIndex, accommodation.placeImages]);
 
   return (
     <div className="bg-background min-h-screen">
@@ -104,9 +165,10 @@ export default function AccommodationDetail() {
                 <div
                   key={index}
                   className={cn(
-                    "overflow-hidden rounded-lg",
+                    "overflow-hidden rounded-lg cursor-pointer",
                     index === 0 && "md:col-span-2 md:row-span-2"
                   )}
+                  onClick={() => handleImageClick(index)}
                 >
                   <img
                     src={image.url}
@@ -120,6 +182,68 @@ export default function AccommodationDetail() {
                   />
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* Image Modal */}
+        {selectedImageIndex !== null && accommodation.placeImages && (
+          <div 
+            className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+            onClick={handleClose}
+          >
+            <div className="relative max-w-7xl max-h-full w-full h-full flex items-center justify-center">
+              {/* Close Button */}
+              <button
+                onClick={handleClose}
+                className="absolute top-4 left-4 z-10 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors"
+                aria-label="بستن"
+              >
+                <X className="w-6 h-6" />
+              </button>
+
+              {/* Previous Button */}
+              {accommodation.placeImages.length > 1 && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handlePrevious();
+                  }}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white rounded-full p-3 transition-colors"
+                  aria-label="عکس قبلی"
+                >
+                  <ChevronRight className="w-8 h-8" />
+                </button>
+              )}
+
+              {/* Next Button */}
+              {accommodation.placeImages.length > 1 && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleNext();
+                  }}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white rounded-full p-3 transition-colors"
+                  aria-label="عکس بعدی"
+                >
+                  <ChevronLeft className="w-8 h-8" />
+                </button>
+              )}
+
+              {/* Image */}
+              <img
+                src={accommodation.placeImages[selectedImageIndex].url}
+                alt={accommodation.placeImages[selectedImageIndex].caption || accommodation.title}
+                className="max-w-full max-h-full object-contain"
+                onClick={(e) => e.stopPropagation()}
+              />
+
+              {/* Image Counter */}
+              {accommodation.placeImages.length > 1 && (
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white px-4 py-2 rounded-full text-sm">
+                  {selectedImageIndex + 1} / {accommodation.placeImages.length}
+                </div>
+              )}
             </div>
           </div>
         )}
